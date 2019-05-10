@@ -20,25 +20,29 @@ public class CLType<E> {
         public Node(){
             this(null,null);
         }
+        @Override
+        public String toString(){
+            return key.toString();
+        }
     }
 
     Node head;
-    public CLType(){
-        head = null;
-    }
     public CLType(ArrayList<E> arrs){
+        if (arrs.isEmpty() && arrs == null){
+            throw new IllegalArgumentException("ArrayList is Empty!");
+        }
         head = new Node(arrs.get(0));
-        Node temp = new Node();
+        Node pre = head;
         for (int i=1;i<arrs.size();i++){
-            head.next =new Node(arrs.get(i));
-            head = head.next;
+            pre.next =new Node(arrs.get(i));
+            pre = pre.next;
         }
     }
-    CLType CLFindNode(CLType head,String key){
+    CLType CLFindNode(CLType clType,String key){
         CLType htemp;
-        htemp = head;
+        htemp = clType;
         while (htemp.head!= null){
-            if (htemp.head.key == key){
+            if (htemp.head.key.equals(key)){
                 return htemp;
             }
             htemp.head = htemp.head.next;
@@ -48,9 +52,12 @@ public class CLType<E> {
     @Override
     public String toString(){
         StringBuilder res = new StringBuilder();
-        while (head.next != null){
-            res.append(head.key+"-->");
+        Node cur = head;
+        while (cur != null){
+            res.append(cur.key+"-->");
+            cur = cur.next;
         }
+        res.append("NULL");
         return res.toString();
     }
 
@@ -58,11 +65,21 @@ public class CLType<E> {
         ArrayList<String> arrayList = new ArrayList<>();
         Scanner in = new Scanner(System.in);
         System.out.println("Please input Single Chain: ");
-        String  key = in.next();
-        arrayList.add(key);
+        String key;
+        do {
+            key = in.next();// 174997636
+            arrayList.add(key);
+        }while (!in.hasNext("end"));
+//        while(in.hasNext()){
+//            key = in.next();
+//            if (key.equals("\n")) //如何匹配到换行符时，结束输入操作？
+//                break;
+//            arrayList.add(key);
+//        }
+
         CLType<String> clType = new CLType<>(arrayList);
         System.out.println(clType);
-        CLType res=(new CLType()).CLFindNode(clType,"20");
+        CLType res=clType.CLFindNode(clType,"20");
         System.out.println(res);
     }
 }
